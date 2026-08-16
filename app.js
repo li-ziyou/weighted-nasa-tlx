@@ -26,7 +26,8 @@ ratingFields.innerHTML = dimensions.map(({ id, label, question }) => `
   <label class="rating-field" for="${id}">
     <span class="rating-label">${label}</span>
     <span class="rating-question">${question}</span>
-    <input id="${id}" data-rating="${id}" type="number" inputmode="numeric" min="0" max="100" step="5" placeholder="0–100" required />
+    <span class="slider-row"><input id="${id}" data-rating="${id}" type="range" min="0" max="100" step="5" value="50" aria-describedby="${id}Value" /><output id="${id}Value" class="rating-value">—</output></span>
+    <span class="slider-scale" aria-hidden="true"><span>0</span><span>100</span></span>
   </label>`).join("");
 
 pairwiseFields.innerHTML = pairs.map(([left, right], index) => `
@@ -40,6 +41,9 @@ pairwiseFields.innerHTML = pairs.map(([left, right], index) => `
   </fieldset>`).join("");
 
 function mode() { return document.querySelector('input[name="mode"]:checked').value; }
+function paintSlider(input, value) {
+  input.style.background = `linear-gradient(90deg, var(--accent) 0 ${value}%, #d9e2dd ${value}% 100%)`;
+}
 function ratingsComplete() { return dimensions.every(({ id }) => Number.isFinite(ratings[id]) && ratings[id] >= 0 && ratings[id] <= 100); }
 function weights() {
   const tally = Object.fromEntries(dimensions.map(({ id }) => [id, 0]));
@@ -81,6 +85,8 @@ document.addEventListener("input", (event) => {
   if (!id) return;
   const value = Number(event.target.value);
   ratings[id] = event.target.value === "" || !Number.isFinite(value) ? null : value;
+  document.querySelector(`#${id}Value`).value = value;
+  paintSlider(event.target, value);
   calculate();
 });
 document.querySelectorAll('input[name="mode"]').forEach((input) => input.addEventListener("change", calculate));
