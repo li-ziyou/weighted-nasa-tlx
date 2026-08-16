@@ -8,7 +8,7 @@ const dimensions = [
 ];
 
 const pairs = dimensions.flatMap((left, index) => dimensions.slice(index + 1).map((right) => [left, right]));
-const ratings = Object.fromEntries(dimensions.map(({ id }) => [id, null]));
+const ratings = Object.fromEntries(dimensions.map(({ id }) => [id, 50]));
 const choices = {};
 const participantInput = document.querySelector("#participantId");
 const ratingFields = document.querySelector("#ratingFields");
@@ -24,10 +24,8 @@ if (initialParticipant) participantInput.value = initialParticipant;
 
 ratingFields.innerHTML = dimensions.map(({ id, label, question }) => `
   <label class="rating-field" for="${id}">
-    <span class="rating-label">${label}</span>
-    <span class="rating-question">${question}</span>
-    <span class="slider-row"><input id="${id}" data-rating="${id}" type="range" min="0" max="100" step="5" value="50" aria-describedby="${id}Value" /><output id="${id}Value" class="rating-value">—</output></span>
-    <span class="slider-scale" aria-hidden="true"><span>0</span><span>100</span></span>
+    <span class="rating-copy"><span class="rating-label">${label}</span><span class="rating-question">${question}</span></span>
+    <span class="rating-control"><span class="slider-row"><input id="${id}" data-rating="${id}" type="range" min="0" max="100" step="5" value="50" aria-describedby="${id}Value" /><output id="${id}Value" class="rating-value">50</output></span><span class="slider-scale" aria-hidden="true"><span>0</span><span>100</span></span></span>
   </label>`).join("");
 
 pairwiseFields.innerHTML = pairs.map(([left, right], index) => `
