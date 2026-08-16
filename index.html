@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="A local, downloadable NASA-TLX workload questionnaire." />
+    <title>NASA-TLX Workload Questionnaire</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <header class="hero">
+        <p class="eyebrow">WORKLOAD ASSESSMENT</p>
+        <h1>NASA-TLX</h1>
+        <p>Record ratings, calculate workload, and download one CSV record.</p>
+      </header>
+
+      <section class="card setup-card" aria-labelledby="setup-title">
+        <h2 id="setup-title">Session</h2>
+        <label for="participantId">Participant ID <span aria-hidden="true">*</span></label>
+        <input id="participantId" name="participantId" type="text" autocomplete="off" maxlength="120" placeholder="e.g., P904" required />
+        <p class="hint">You can also prefill this field with <code>?participant=P904</code> in the page URL.</p>
+
+        <fieldset class="mode-picker">
+          <legend>Scoring method</legend>
+          <label class="choice"><input type="radio" name="mode" value="raw" checked /> <span><strong>Raw NASA-TLX</strong><small>Average of the six ratings.</small></span></label>
+          <label class="choice"><input type="radio" name="mode" value="weighted" /> <span><strong>Weighted NASA-TLX</strong><small>Ratings weighted through 15 pairwise choices.</small></span></label>
+        </fieldset>
+      </section>
+
+      <section class="card" aria-labelledby="ratings-title">
+        <div class="section-heading">
+          <div><p class="step">01</p><h2 id="ratings-title">Rate the task</h2></div>
+          <p class="hint">0 = very low, 100 = very high. Use steps of 5.</p>
+        </div>
+        <div id="ratingFields" class="ratings-grid"></div>
+      </section>
+
+      <section id="pairwiseSection" class="card hidden" aria-labelledby="pairwise-title">
+        <div class="section-heading">
+          <div><p class="step">02</p><h2 id="pairwise-title">Choose the greater contributor</h2></div>
+          <p id="pairwiseProgress" class="progress" aria-live="polite">0 of 15 selected</p>
+        </div>
+        <p class="intro">For each pair, choose the factor that contributed more to workload during this task.</p>
+        <div id="pairwiseFields" class="pairwise-grid"></div>
+      </section>
+
+      <section class="card result-card" aria-labelledby="result-title">
+        <div class="section-heading"><div><p class="step">03</p><h2 id="result-title">Result</h2></div></div>
+        <div class="score-row"><span id="scoreLabel">Raw workload score</span><output id="score" aria-live="polite">—</output><span>/ 100</span></div>
+        <p id="resultDetail" class="hint">Enter all six ratings to calculate the score.</p>
+        <p id="validationMessage" class="validation" aria-live="assertive"></p>
+        <button id="downloadButton" type="button">Download CSV record</button>
+        <p class="privacy-note">This page does not send or store participant data. The CSV downloads to this device.</p>
+      </section>
+    </main>
+    <footer>NASA-TLX is a subjective workload measure. Use your approved study protocol for administration and data handling.</footer>
+    <script src="app.js"></script>
+  </body>
+</html>
