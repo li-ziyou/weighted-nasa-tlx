@@ -18,9 +18,17 @@ const score = document.querySelector("#score");
 const scoreLabel = document.querySelector("#scoreLabel");
 const resultDetail = document.querySelector("#resultDetail");
 const validationMessage = document.querySelector("#validationMessage");
+const sessionLabel = document.querySelector("#sessionLabel");
 
-const initialParticipant = new URLSearchParams(window.location.search).get("participant");
+const query = new URLSearchParams(window.location.search);
+const initialParticipant = query.get("participant");
 if (initialParticipant) participantInput.value = initialParticipant;
+const initialLabel = query.get("label");
+if (initialLabel) {
+  sessionLabel.textContent = initialLabel;
+  sessionLabel.classList.remove("hidden");
+  document.title = `NASA-TLX — ${initialLabel}`;
+}
 
 ratingFields.innerHTML = dimensions.map(({ id, label, question }) => `
   <label class="rating-field" for="${id}">
@@ -105,7 +113,7 @@ document.querySelector("#downloadButton").addEventListener("click", () => {
   if (!ratingsComplete()) { validationMessage.textContent = "Enter a rating from 0 to 100 for all six dimensions before downloading."; return; }
   if (mode() === "weighted" && Object.keys(choices).length !== pairs.length) { validationMessage.textContent = "Choose one contributor for every pair before downloading the weighted record."; return; }
   const row = {
-    timestamp_iso: new Date().toISOString(), participant_id: participant, scoring_method: mode(),
+    timestamp_iso: new Date().toISOString(), participant_id: participant, session_label: initialLabel ?? "", scoring_method: mode(),
     raw_nasa_tlx: calculated.raw.toFixed(2), weighted_nasa_tlx: calculated.weighted?.toFixed(2) ?? "",
     ...Object.fromEntries(dimensions.map(({ id }) => [`${id}_rating`, ratings[id]])),
     ...Object.fromEntries(dimensions.map(({ id }) => [`${id}_weight`, calculated.weights?.[id] ?? ""])),

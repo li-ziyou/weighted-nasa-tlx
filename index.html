@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content="A local, downloadable NASA-TLX workload questionnaire." />
     <title>NASA-TLX Workload Questionnaire</title>
-    <link rel="stylesheet" href="styles.css?v=96be886" />
+    <link rel="stylesheet" href="styles.css?v=study-launch" />
   </head>
   <body>
     <main class="page-shell">
@@ -20,6 +20,7 @@
         <label for="participantId">Participant ID <span aria-hidden="true">*</span></label>
         <input id="participantId" name="participantId" type="text" autocomplete="off" maxlength="120" placeholder="e.g., P904" required />
         <p class="hint">You can also prefill this field with <code>?participant=P904</code> in the page URL.</p>
+        <p id="sessionLabel" class="session-label hidden" aria-live="polite"></p>
 
         <fieldset class="mode-picker">
           <legend>Scoring method</legend>
@@ -55,6 +56,6 @@
       </section>
     </main>
     <footer>NASA-TLX is a subjective workload measure. Use your approved study protocol for administration and data handling.</footer>
-    <script src="app.js?v=96be886"></script>
+    <script src="app.js?v=study-launch"></script>
   </body>
 </html>
