@@ -24,6 +24,7 @@ const query = new URLSearchParams(window.location.search);
 const initialParticipant = query.get("participant");
 if (initialParticipant) participantInput.value = initialParticipant;
 const initialLabel = query.get("label");
+const initialPeriod = initialLabel?.match(/\bPeriod\s+([1-9]\d*)\b/i)?.[1] ?? "";
 if (initialLabel) {
   sessionLabel.textContent = initialLabel;
   sessionLabel.classList.remove("hidden");
@@ -113,7 +114,7 @@ document.querySelector("#downloadButton").addEventListener("click", () => {
   if (!ratingsComplete()) { validationMessage.textContent = "Enter a rating from 0 to 100 for all six dimensions before downloading."; return; }
   if (mode() === "weighted" && Object.keys(choices).length !== pairs.length) { validationMessage.textContent = "Choose one contributor for every pair before downloading the weighted record."; return; }
   const row = {
-    timestamp_iso: new Date().toISOString(), participant_id: participant, session_label: initialLabel ?? "", scoring_method: mode(),
+    timestamp_iso: new Date().toISOString(), participant_id: participant, session_label: initialLabel ?? "", period: initialPeriod, scoring_method: mode(),
     raw_nasa_tlx: calculated.raw.toFixed(2), weighted_nasa_tlx: calculated.weighted?.toFixed(2) ?? "",
     ...Object.fromEntries(dimensions.map(({ id }) => [`${id}_rating`, ratings[id]])),
     ...Object.fromEntries(dimensions.map(({ id }) => [`${id}_weight`, calculated.weights?.[id] ?? ""])),
@@ -121,7 +122,8 @@ document.querySelector("#downloadButton").addEventListener("click", () => {
   const csv = `${Object.keys(row).join(",")}\n${Object.values(row).map(csvEscape).join(",")}\n`;
   const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
   const link = document.createElement("a");
-  link.href = url; link.download = `nasa-tlx_${participant.replaceAll(/[^a-z0-9_-]/gi, "_")}_${new Date().toISOString().slice(0, 10)}.csv`;
+  const periodSuffix = initialPeriod ? `_period${initialPeriod}` : "";
+  link.href = url; link.download = `nasa-tlx_${participant.replaceAll(/[^a-z0-9_-]/gi, "_")}${periodSuffix}_${new Date().toISOString().slice(0, 10)}.csv`;
   link.click(); URL.revokeObjectURL(url);
 });
 
